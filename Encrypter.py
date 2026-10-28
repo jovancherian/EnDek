@@ -11,17 +11,25 @@ from Scrambler import new_encryption_key_unscrambler
 from Scrambler import user_panic
 from Scrambler import pre_scrambler
 from Scrambler import scrambeler_updater
-from argon2 import PasswordHasher
 import string
 import sys
-from Functionalities import updater, cache_clearer
-CLI.logos()
+import os 
+from pathlib import Path
+from Functionalities import updater, cache_clearer, intial_checker
+try:
+    from argon2 import PasswordHasher
+except ImportError:
+    print("required Dependencies are not installed to run EnDek.")
+    print('please install it using the command: pip install -r requirments.txt')
+    exit(1)
+CLI.logo()
 
-EnDek_verison = "2.7.1"
-EnDek_name = "Ludicrous"
+EnDek_verison = "2.7.5"
+EnDek_name = "ViaLactea"
 latest_version = updater.intial_update_checker(EnDek_verison)
 if latest_version is not None:
     print(latest_version)
+intial_checker.startup_check()
 class AccoutDeletion(Exception):
     pass
 def password_hashing(password):
@@ -174,6 +182,9 @@ def main():
                             if user_input == "/logout":
                                 break        
                             # config menu setting
+                            if user_input == "/key":
+                                print("""thank you for keeping youself update about EnDek.
+mutiple key feature will come soon...""")
                             if user_input.lower() == "/config":
                                 user_request= input(CLI.EnDek_config_logo())
                                 # Encryption Settings menu
@@ -256,7 +267,7 @@ def main():
                                                 Decrypter  = {value: key for key, value in encrypt1.items()}
                                                 encryption_key_db_connection.commit()
                                                 print("Encryption key was generated and was added as a key...")
-                                    # Database Settings menu
+                                   
                                     elif user_request_1 == "3":
                                         user_db_cursor.execute("SELECT scrambler FROM users WHERE username = ? " , (input_username,))
                                         scrambler_status = user_db_cursor.fetchone()[0]
@@ -310,6 +321,7 @@ def main():
                                                     returned_string = letter_remover.LetterFunctions.letter_remover(pre_returned_string)
                                                     print("Encryption key: " + returned_string)
                                                     print("Encryption key exported successfully...")
+                                # Database settings menu
                                 elif user_request == "3":
                                     user_request_3 = CLI.Database_settings_menu()
                                     if user_request_3 == "1":
@@ -349,7 +361,7 @@ def main():
                                 elif user_request == "4":
                                     user_request_dual_endek = CLI.endek_dual_settings()
                                     if user_request_dual_endek == "1":
-                                        CLI.logos()
+                                        CLI.logo()
                                         print("Version " + EnDek_verison)
                                         print("---------------------------------")
                                         print(f"Signed in as: {input_username}")
@@ -369,7 +381,30 @@ def main():
                                         else:
                                             print("There is 1 local user.")
                                     elif user_request_dual_endek == "2":
-                                        print(updater.update_checker(EnDek_verison))
+                                        update_status =updater.update_checker(EnDek_verison)
+                                        print(update_status)
+                                        if update_status != "you are up to date!":
+                                            user_update_response = CLI.endek_update_menu()
+                                            if user_update_response == "1":
+                                                print("""In case of corupted or broken update, role back using: python rollback.py""")
+                                                updater.update_now(EnDek_verison)
+                                        elif update_status == "you are up to date!":
+                                            while True:
+                                                user_request_update = CLI.endek_no_update_menu()
+                                                if user_request_update == "1":
+                                                    update_re_status = updater.update_checker(EnDek_verison)
+                                                    if update_re_status != "you are up to date!":
+                                                        user_update_response = CLI.endek_update_menu()
+                                                        if user_update_response == "1":
+                                                            print("""In case of corupted or broken update, role back using: python rollback.py""")
+                                                            updater.update_now(EnDek_verison)
+                                                    elif update_re_status == "you are up to date!":
+                                                        continue
+                                                elif user_request_update == "2":
+                                                    print("""In case of corupted or broken update, role back using: python rollback.py""")
+                                                    updater.update_now_overide()
+                                                elif user_request_update == "3":
+                                                    break
                                     elif user_request_dual_endek == "3":
                                         conformation = input("""Are you sure you want to clear the cache this can result in slower speed for 
 sometime, but can increase speed over time don't use this freature frequently.(y/n): """)
@@ -379,9 +414,20 @@ sometime, but can increase speed over time don't use this freature frequently.(y
                                                 print("Cache cleared successfully...")
                                             elif trail == False:
                                                 print("Cache clearing failed...")
-                                    
+                                    elif user_request == "4":
+                                        user_theme_request = CLI.endek_themes()
+                                        if user_theme_request == "1":
+                                            CLI.theme_choice_maker("default")
+                                            print("""Theme successfully set to EnDek orginal.
+Restart to apply the changes.""")
+                                        elif user_theme_request == "2":
+                                            CLI.theme_choice_maker("claude")
+                                            print("""Theme successfully set to Claude code style.
+Restart to apply the changes.""")
+                                        elif user_theme_request == "3":
+                                            print("Thank you for your excitement, But custom themes are under development. ")
                             if len(user_covert_input) !=0 :
-                                if user_covert_input[-1] == "E" and user_input !="/config":
+                                if user_covert_input[-1] == "E" and user_input[0] !="/":
                                     encryption_key_cursor.execute(f'SELECT * FROM "{input_username}"')
                                     encrypt_demo = encryption_key_cursor.fetchall()
                                     encrypt = database_to_dict.database_to_dict(encrypt_demo)
@@ -391,7 +437,7 @@ sometime, but can increase speed over time don't use this freature frequently.(y
                                             return_list.append(Decrypter.get(i , "letter not found :("))
                                     return_word = "".join(return_list)
                                     print(return_word)
-                                if user_covert_input[-1] != "E" and user_input !="/config":
+                                if user_covert_input[-1] != "E" and user_input[0] !="/":
                                     invalid_character_list = []
                                     for i in user_covert_input :
                                         try:
@@ -409,9 +455,7 @@ sometime, but can increase speed over time don't use this freature frequently.(y
                     except KeyboardInterrupt:
                         print("Thank You for using EnDek")
                         sys.exit()
-                    except Exception as e:
-                        print(f"error occured: {e}")
-                        print("if you were trying to enter any kind of input, please make sure it is a valid Type of input in EnDek")
+
 
                 elif password_verification(input_password_1, users[input_username]) == False:
                     print("wrong password!!")
