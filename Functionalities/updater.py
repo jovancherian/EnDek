@@ -14,7 +14,7 @@ import sys
 
 def update_checker(user_version):
     integer_user_version = user_version.split('.')
-    GitHub_API = "https://api.github.com/repos/jovancherian-source/EnDek/releases/latest"
+    GitHub_API = "https://api.github.com/repos/jovancherian/EnDek/releases/latest"
     try:
         request = urllib.request.Request(GitHub_API, headers={"User-Agent": "EnDek"})
         with urllib.request.urlopen(request, timeout=5) as whole_data_json:
@@ -34,7 +34,7 @@ def update_checker(user_version):
         print(e)
 def intial_update_checker(user_version):
     integer_user_version = user_version.split('.')
-    GitHub_API = "https://api.github.com/repos/jovancherian-source/EnDek/releases/latest"
+    GitHub_API = "https://api.github.com/repos/jovancherian/EnDek/releases/latest"
     try:
         request = urllib.request.Request(GitHub_API, headers={"User-Agent": "EnDek"})
         with urllib.request.urlopen(request, timeout=5) as json_whole_data:
@@ -123,12 +123,12 @@ def download_update():
         output_file = EnDek_main.parent/ "EnDek_update_file.zip"
         if Path.exists(output_file):
             shutil.rmtree(output_file)
-        GitHub_release_API = "https://api.github.com/repos/jovancherian-source/EnDek/releases/latest"
+        GitHub_release_API = "https://api.github.com/repos/jovancherian/EnDek/releases/latest"
         release_data = urllib.request.Request(GitHub_release_API, headers={"User-Agent": "EnDek"})
         with urllib.request.urlopen(release_data, timeout=5) as json_data:
             data = json.loads(json_data.read().decode())
         latest_verison = data["tag_name"]
-        GitHub_API = f"https://github.com/jovancherian-source/EnDek/releases/download/{latest_verison}/{latest_verison.strip("v")}-Update.zip"
+        GitHub_API = f"https://github.com/jovancherian/EnDek/releases/download/{latest_verison}/{latest_verison.strip("v")}-Update.zip"
         url_data = urllib.request.Request(GitHub_API, headers={"User-Agent" : "EnDek"})
         with urllib.request.urlopen(url_data) as request, open(output_file, "wb") as output:
             output.write(request.read())
@@ -150,7 +150,7 @@ def sha_checker():
     except Exception as e:
         print(f"failed to index file path due to: {e}")
         return False
-    GitHub_release_API = "https://api.github.com/repos/jovancherian-source/EnDek/releases/latest"
+    GitHub_release_API = "https://api.github.com/repos/jovancherian/EnDek/releases/latest"
     try:
         release_data = urllib.request.Request(GitHub_release_API, headers={"User-Agent": "EnDek"})
         with urllib.request.urlopen(release_data, timeout=5) as json_data:
@@ -186,7 +186,7 @@ def extracter():
         return False
     try:
         output_file = Path(EnDek_main.parent/ "EnDek_update_file.zip")
-        GitHub_release_API = "https://api.github.com/repos/jovancherian-source/EnDek/releases/latest"
+        GitHub_release_API = "https://api.github.com/repos/jovancherian/EnDek/releases/latest"
         release_data = urllib.request.Request(GitHub_release_API, headers={"User-Agent": "EnDek"})
         with urllib.request.urlopen(release_data, timeout=5) as json_data:
             data = json.loads(json_data.read().decode())
@@ -209,7 +209,7 @@ def extracter():
     elif not os.path.exists(Path.joinpath(EnDek_main.parent, "EnDek_update_file.zip")):
         return("Update zip file not found. Please download the update first.")
 def installer():
-    GitHub_API = "https://api.github.com/repos/jovancherian-source/EnDek/releases/latest"
+    GitHub_API = "https://api.github.com/repos/jovancherian/EnDek/releases/latest"
     try:
         request = urllib.request.Request(GitHub_API, headers={"User-Agent": "EnDek"})
         with urllib.request.urlopen(request, timeout=5) as whole_data_json:
@@ -271,21 +271,3 @@ def update_now_overide():
                     sys.stdout.write("\r[█████████████████████████░░░░░]  85.7%")
                     sys.stdout.flush()
                     installer()
-#print(installer())
-#print(update_checker("1.0.0"))
-#print(extracter())
-#print(sha_checker())
-#print(download_update())
-#print(backup())
-#print(after_update_cleanup())
-#print(back_up_verifier(Path("C:/Users/jovan/Documents/EnDek"), Path("C:/Users/jovan/Documents/EnDek_backup_for_update")))
-
-#----------------------------------------|
-
-#check for update----
-# backup data----
-#confirm backup---
-# download the update----
-# verfeify the update----
-# install the update(change the files)
-# restart main
