@@ -542,3 +542,5 @@ Restart to apply the changes.""")
 
 if __name__ == "__main__":
     main()
+
+# Thanks for using EnDek
