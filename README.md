@@ -232,4 +232,5 @@ Do not use the current version as a replacement for professionally audited crypt
 > **Project Status: No longer under Development 🚧**
 
 EnDek no longer receives any updates, but if you come across a bug, feel free to issue it, and I will look into it as soon as possible.
+
 ---
