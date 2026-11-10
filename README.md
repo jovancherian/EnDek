@@ -229,8 +229,7 @@ Do not use the current version as a replacement for professionally audited crypt
 
 # Project Status
 
-> **Project Status: Partial Development 🚧**
+> **Project Status: No longer under Development 🚧**
 
-EnDek is an actively developed personal project. The project is evolving toward stronger cryptography while keeping its interactive CLI and user-friendly design.
-
-The next major milestone is the introduction of **AES-256-level encryption**.
+EnDek no longer receives any updates, but if you come across a bug, feel free to issue it, and I will look into it as soon as possible.
+---
